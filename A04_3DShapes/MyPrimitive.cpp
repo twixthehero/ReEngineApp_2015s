@@ -255,16 +255,61 @@ void MyPrimitive::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a
 	Init();
 
 	//Your code starts here
-	float fValue = 0.5f;
-	//3--2
-	//|  |
-	//0--1
-	vector3 point0(-fValue, -fValue, fValue); //0
-	vector3 point1(fValue, -fValue, fValue); //1
-	vector3 point2(fValue, fValue, fValue); //2
-	vector3 point3(-fValue, fValue, fValue); //3
+    float y = a_fRadius;
+    float yDif = a_fRadius * 2 / (a_nSubdivisions + 1);
+    float angle = 360.0f / a_nSubdivisions / 180 * PI;
+    vector3 top(0, a_fRadius, 0);
+    vector3 bot(0, -a_fRadius, 0);
 
-	AddQuad(point0, point1, point3, point2);
+    vector3* points = new vector3[a_nSubdivisions];
+    vector3* nextPoints = new vector3[a_nSubdivisions];
+
+    for (int i = 0; i < a_nSubdivisions; i++)
+    {
+        float radius = a_fRadius / a_nSubdivisions;
+
+        for (int k = 0; k < a_nSubdivisions; k++)
+        {
+            nextPoints[k] = vector3(cos(k * angle) * a_fRadius, y - (i + 1) * yDif, sin(k * angle) * a_fRadius);
+        }
+
+        //create verts
+        //if we're at the top
+        if (i == 0)
+        {
+            for (int k = 0; k < a_nSubdivisions; k++)
+            {
+                AddVertexPosition(nextPoints[(k + 1) % a_nSubdivisions]);
+                AddVertexPosition(nextPoints[k]);
+                AddVertexPosition(top);
+            }
+        }
+        //if we're at the bottom
+        else if (i == a_nSubdivisions - 1)
+        {
+            for (int k = 0; k < a_nSubdivisions; k++)
+            {
+                AddVertexPosition(nextPoints[k]);
+                AddVertexPosition(nextPoints[(k + 1) % a_nSubdivisions]);
+                AddVertexPosition(bot);
+            }
+        }
+        //if we're creating quads
+        else
+        {
+            for (int k = 0; k < a_nSubdivisions; k++)
+            {
+                AddQuad(nextPoints[(k + 1) % a_nSubdivisions], nextPoints[k], points[(k + 1) % a_nSubdivisions], points[k]);
+            }
+        }
+
+        //store nextPoints into points
+        for (int k = 0; k < a_nSubdivisions; k++)
+            points[k] = nextPoints[k];
+    }
+
+    delete[] points;
+    delete[] nextPoints;
 
 	//Your code ends here
 	CompileObject(a_v3Color);
