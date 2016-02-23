@@ -248,8 +248,8 @@ void MyPrimitive::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a
 		GenerateCube(a_fRadius * 2, a_v3Color);
 		return;
 	}
-	if (a_nSubdivisions > 6)
-		a_nSubdivisions = 6;
+	//if (a_nSubdivisions > 6)
+		//a_nSubdivisions = 6;
 
 	Release();
 	Init();
@@ -264,10 +264,41 @@ void MyPrimitive::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a
     vector3* points = new vector3[a_nSubdivisions];
     vector3* nextPoints = new vector3[a_nSubdivisions];
 
-    for (int i = 0; i < a_nSubdivisions; i++)
-    {
-        float radius = a_fRadius / a_nSubdivisions;
+    //calculate radius at subdivisions
+    float* radii = new float[a_nSubdivisions];
 
+    for (int i = 0; i < a_nSubdivisions / 2; i++)
+        radii[i] = radii[a_nSubdivisions - i - 1] = a_fRadius * ((float)i / (a_nSubdivisions / 2));
+
+    if (a_nSubdivisions % 2 == 1)
+        radii[a_nSubdivisions / 2 + 1] = a_fRadius;
+
+    //top
+    for (int k = 0; k < a_nSubdivisions; k++)
+    {
+        nextPoints[k] = vector3(cos(k * angle) * a_fRadius, y - yDif, sin(k * angle) * a_fRadius);
+    }
+    for (int k = 0; k < a_nSubdivisions; k++)
+    {
+        AddVertexPosition(nextPoints[(k + 1) % a_nSubdivisions]);
+        AddVertexPosition(nextPoints[k]);
+        AddVertexPosition(top);
+    }
+    //bottom
+    for (int k = 0; k < a_nSubdivisions; k++)
+    {
+        nextPoints[k] = vector3(cos(k * angle) * a_fRadius, -y + yDif, sin(k * angle) * a_fRadius);
+    }
+    for (int k = 0; k < a_nSubdivisions; k++)
+    {
+        AddVertexPosition(nextPoints[k]);
+        AddVertexPosition(nextPoints[(k + 1) % a_nSubdivisions]);
+        AddVertexPosition(bot);
+    }
+    /*
+    //sides
+    for (int i = 0; i < a_nSubdivisions + 2; i++)
+    {
         for (int k = 0; k < a_nSubdivisions; k++)
         {
             nextPoints[k] = vector3(cos(k * angle) * a_fRadius, y - (i + 1) * yDif, sin(k * angle) * a_fRadius);
@@ -285,7 +316,7 @@ void MyPrimitive::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a
             }
         }
         //if we're at the bottom
-        else if (i == a_nSubdivisions - 1)
+        else if (i == a_nSubdivisions + 2 - 1)
         {
             for (int k = 0; k < a_nSubdivisions; k++)
             {
@@ -297,17 +328,19 @@ void MyPrimitive::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a
         //if we're creating quads
         else
         {
-            for (int k = 0; k < a_nSubdivisions; k++)
-            {
-                AddQuad(nextPoints[(k + 1) % a_nSubdivisions], nextPoints[k], points[(k + 1) % a_nSubdivisions], points[k]);
-            }
+            std::cout << "times drawing quads: " << i << std::endl;
+            //for (int k = 0; k < a_nSubdivisions; k++)
+            //{
+                //AddQuad(nextPoints[(k + 1) % a_nSubdivisions], nextPoints[k], points[(k + 1) % a_nSubdivisions], points[k]);
+            //}
         }
 
         //store nextPoints into points
         for (int k = 0; k < a_nSubdivisions; k++)
             points[k] = nextPoints[k];
-    }
+    }*/
 
+    delete[] radii;
     delete[] points;
     delete[] nextPoints;
 
