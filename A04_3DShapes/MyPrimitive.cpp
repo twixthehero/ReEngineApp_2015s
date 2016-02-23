@@ -1,3 +1,4 @@
+#include <cmath>
 #include "MyPrimitive.h"
 MyPrimitive::MyPrimitive() { }
 MyPrimitive::MyPrimitive(const MyPrimitive& other) { }
@@ -110,16 +111,24 @@ void MyPrimitive::GenerateCone(float a_fRadius, float a_fHeight, int a_nSubdivis
 	Init();
 
 	//Your code starts here
-	float fValue = 0.5f;
-	//3--2
-	//|  |
-	//0--1
-	vector3 point0(-fValue, -fValue, fValue); //0
-	vector3 point1(fValue, -fValue, fValue); //1
-	vector3 point2(fValue, fValue, fValue); //2
-	vector3 point3(-fValue, fValue, fValue); //3
+    float angle = 360.0f / a_nSubdivisions / 180 * PI;
+    float y = -a_fHeight / 2;
+    vector3 tip(0, a_fHeight / 2, 0);
+    vector3 center(0, y, 0);
 
-	AddQuad(point0, point1, point3, point2);
+    for (int i = 0; i < a_nSubdivisions; i++)
+    {
+        vector3 a(cos(i * angle) * a_fRadius, y, sin(i * angle) * a_fRadius);
+        vector3 b(cos((i + 1) * angle) * a_fRadius, y, sin((i + 1) * angle) * a_fRadius);
+
+        AddVertexPosition(a);
+        AddVertexPosition(b);
+        AddVertexPosition(tip);
+
+        AddVertexPosition(b);
+        AddVertexPosition(a);
+        AddVertexPosition(center);
+    }
 
 	//Your code ends here
 	CompileObject(a_v3Color);
@@ -135,16 +144,29 @@ void MyPrimitive::GenerateCylinder(float a_fRadius, float a_fHeight, int a_nSubd
 	Init();
 
 	//Your code starts here
-	float fValue = 0.5f;
-	//3--2
-	//|  |
-	//0--1
-	vector3 point0(-fValue, -fValue, fValue); //0
-	vector3 point1(fValue, -fValue, fValue); //1
-	vector3 point2(fValue, fValue, fValue); //2
-	vector3 point3(-fValue, fValue, fValue); //3
+    float angle = 360.0f / a_nSubdivisions / 180 * PI;
+    float topY = a_fHeight / 2;
+    float botY = -a_fHeight / 2;
+    vector3 topCenter(0, topY, 0);
+    vector3 botCenter(0, botY, 0);
 
-	AddQuad(point0, point1, point3, point2);
+    for (int i = 0; i < a_nSubdivisions; i++)
+    {
+        vector3 a(cos(i * angle) * a_fRadius, botY, sin(i * angle) * a_fRadius);
+        vector3 b(cos((i + 1) * angle) * a_fRadius, botY, sin((i + 1) * angle) * a_fRadius);
+        vector3 c(cos(i * angle) * a_fRadius, topY, sin(i * angle) * a_fRadius);
+        vector3 d(cos((i + 1) * angle) * a_fRadius, topY, sin((i + 1) * angle) * a_fRadius);
+
+        AddQuad(a, b, c, d);
+
+        AddVertexPosition(c);
+        AddVertexPosition(d);
+        AddVertexPosition(topCenter);
+
+        AddVertexPosition(b);
+        AddVertexPosition(a);
+        AddVertexPosition(botCenter);
+    }
 
 	//Your code ends here
 	CompileObject(a_v3Color);
@@ -160,16 +182,27 @@ void MyPrimitive::GenerateTube(float a_fOuterRadius, float a_fInnerRadius, float
 	Init();
 
 	//Your code starts here
-	float fValue = 0.5f;
-	//3--2
-	//|  |
-	//0--1
-	vector3 point0(-fValue, -fValue, fValue); //0
-	vector3 point1(fValue, -fValue, fValue); //1
-	vector3 point2(fValue, fValue, fValue); //2
-	vector3 point3(-fValue, fValue, fValue); //3
+    float angle = 360.0f / a_nSubdivisions / 180 * PI;
+    float topY = a_fHeight / 2;
+    float botY = -a_fHeight / 2;
 
-	AddQuad(point0, point1, point3, point2);
+    for (int i = 0; i < a_nSubdivisions; i++)
+    {
+        vector3 a(cos(i * angle) * a_fOuterRadius, botY, sin(i * angle) * a_fOuterRadius);
+        vector3 b(cos((i + 1) * angle) * a_fOuterRadius, botY, sin((i + 1) * angle) * a_fOuterRadius);
+        vector3 c(cos(i * angle) * a_fOuterRadius, topY, sin(i * angle) * a_fOuterRadius);
+        vector3 d(cos((i + 1) * angle) * a_fOuterRadius, topY, sin((i + 1) * angle) * a_fOuterRadius);
+
+        vector3 e(cos(i * angle) * a_fInnerRadius, botY, sin(i * angle) * a_fInnerRadius);
+        vector3 f(cos((i + 1) * angle) * a_fInnerRadius, botY, sin((i + 1) * angle) * a_fInnerRadius);
+        vector3 g(cos(i * angle) * a_fInnerRadius, topY, sin(i * angle) * a_fInnerRadius);
+        vector3 h(cos((i + 1) * angle) * a_fInnerRadius, topY, sin((i + 1) * angle) * a_fInnerRadius);
+
+        AddQuad(a, c, b, d);
+        AddQuad(e, f, g, h);
+        AddQuad(a, b, e, f);
+        AddQuad(d, c, h, g);
+    }
 
 	//Your code ends here
 	CompileObject(a_v3Color);
