@@ -226,16 +226,31 @@ void MyPrimitive::GenerateTorus(float a_fOuterRadius, float a_fInnerRadius, int 
 	Init();
 
 	//Your code starts here
-	float fValue = 0.5f;
-	//3--2
-	//|  |
-	//0--1
-	vector3 point0(-fValue, -fValue, fValue); //0
-	vector3 point1(fValue, -fValue, fValue); //1
-	vector3 point2(fValue, fValue, fValue); //2
-	vector3 point3(-fValue, fValue, fValue); //3
+    float angleA = 360.0f / a_nSubdivisionsA / 180 * PI;
+    float angleB = 360.0f / a_nSubdivisionsB / 180 * PI;
+    float miniRadius = (a_fOuterRadius - a_fInnerRadius) / 2;
+    float radiusMid = miniRadius + a_fInnerRadius;
 
-	AddQuad(point0, point1, point3, point2);
+    vector3* points = new vector3[a_nSubdivisionsB];
+    vector3* nextPoints = new vector3[a_nSubdivisionsB];
+
+    for (int i = 0; i < a_nSubdivisionsA; i++)
+    {
+        for (int k = 0; k < a_nSubdivisionsB; k++)
+        {
+            nextPoints[k] = vector3(cos(i * angleA) * miniRadius, sin(k * angleB) * miniRadius, sin(i * angleA) * miniRadius);
+        }
+
+        //add quads for current section if not first time
+        if (i != 0)
+        {
+            for (int k = 0; k < a_nSubdivisionsB; k++)
+                AddQuad(nextPoints[(k + 1) % a_nSubdivisionsB], nextPoints[k], points[(k + 1) % a_nSubdivisionsB], points[k]);
+        }
+
+        for (int k = 0; k < a_nSubdivisionsB; k++)
+            points[k] = nextPoints[k];
+    }
 
 	//Your code ends here
 	CompileObject(a_v3Color);
@@ -261,7 +276,9 @@ void MyPrimitive::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a
     //add two to account for top and bottom endpoints
     //very inefficient to create a_nSubdivision points triangles,
     //but it works
-    a_nSubdivisions += 2;
+    //a_nSubdivisions += 2;
+
+    std::cout << "=======================================" << std::endl;
 
     //max y value
     float y = a_fRadius;
@@ -272,6 +289,8 @@ void MyPrimitive::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a
     //amount of rotation per subdivision
     float angle = 360.0f / a_nSubdivisions / 180 * PI;
 
+    std::cout << "yDif: " << yDif << std::endl;
+
     //create array to hold current points and next points
     vector3* points = new vector3[a_nSubdivisions];
     vector3* nextPoints = new vector3[a_nSubdivisions];
@@ -280,17 +299,22 @@ void MyPrimitive::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a
     float* radii = new float[a_nSubdivisions];
 
     //calculate radius at each subdivisions
-    for (int i = 0; i < a_nSubdivisions / 2; i++)
+    //for (int i = 0; i < a_nSubdivisions / 2; i++)
+    //{
+        //radii[i] = radii[a_nSubdivisions - i - 1] =
+            //sqrt(pow(a_fRadius, 2) - pow(a_fRadius - (i * yDif), 2));
+    //}
+    for (int i = 0; i < a_nSubdivisions; i++)
     {
-        radii[i] = radii[a_nSubdivisions - i - 1] =
-            sqrt(pow(a_fRadius, 2) - pow(a_fRadius - (i * yDif), 2));
+        std::cout << i << ": " << i * angle / 2 << std::endl;
+        radii[i] = a_fRadius * asin(i * angle / 2);
     }
 
     //if the number of subdivisions is odd,
     //set the middle radius to the full radius
     if (a_nSubdivisions % 2 == 1)
         radii[a_nSubdivisions / 2 + 1] = a_fRadius;
-    
+
     //sides
     for (int i = 0; i < a_nSubdivisions; i++)
     {
@@ -299,9 +323,14 @@ void MyPrimitive::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a
             nextPoints[k] = vector3(cos(k * angle) * radii[i], y - (i + 1) * yDif, sin(k * angle) * radii[i]);
         }
 
+        std::cout << "radius " << i << ": " << radii[i] << std::endl;
+
         //add the quad for this slice
-        for (int k = 0; k < a_nSubdivisions; k++)
-            AddQuad(nextPoints[(k + 1) % a_nSubdivisions], nextPoints[k], points[(k + 1) % a_nSubdivisions], points[k]);
+        if (i != 0)
+        {
+            for (int k = 0; k < a_nSubdivisions; k++)
+                AddQuad(nextPoints[(k + 1) % a_nSubdivisions], nextPoints[k], points[(k + 1) % a_nSubdivisions], points[k]);
+        }
 
         //store nextPoints into points
         for (int k = 0; k < a_nSubdivisions; k++)
