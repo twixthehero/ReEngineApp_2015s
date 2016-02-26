@@ -121,12 +121,12 @@ void MyPrimitive::GenerateCone(float a_fRadius, float a_fHeight, int a_nSubdivis
         vector3 a(cos(i * angle) * a_fRadius, y, sin(i * angle) * a_fRadius);
         vector3 b(cos((i + 1) * angle) * a_fRadius, y, sin((i + 1) * angle) * a_fRadius);
 
-        AddVertexPosition(a);
         AddVertexPosition(b);
+        AddVertexPosition(a);
         AddVertexPosition(tip);
 
-        AddVertexPosition(b);
         AddVertexPosition(a);
+        AddVertexPosition(b);
         AddVertexPosition(center);
     }
 
@@ -157,14 +157,14 @@ void MyPrimitive::GenerateCylinder(float a_fRadius, float a_fHeight, int a_nSubd
         vector3 c(cos(i * angle) * a_fRadius, topY, sin(i * angle) * a_fRadius);
         vector3 d(cos((i + 1) * angle) * a_fRadius, topY, sin((i + 1) * angle) * a_fRadius);
 
-        AddQuad(a, b, c, d);
+        AddQuad(b, a, d, c);
 
-        AddVertexPosition(c);
         AddVertexPosition(d);
+        AddVertexPosition(c);
         AddVertexPosition(topCenter);
 
-        AddVertexPosition(b);
         AddVertexPosition(a);
+        AddVertexPosition(b);
         AddVertexPosition(botCenter);
     }
 
