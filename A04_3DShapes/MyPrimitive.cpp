@@ -263,67 +263,49 @@ void MyPrimitive::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a
 		GenerateCube(a_fRadius * 2, a_v3Color);
 		return;
 	}
-    //I took this out because I wanted to see how my spheres looked
-    //with bigger subdivisions
-	//if (a_nSubdivisions > 6)
-		//a_nSubdivisions = 6;
+	if (a_nSubdivisions > 6)
+		a_nSubdivisions = 6;
 
 	Release();
 	Init();
 
 	//Your code starts here
-
-    //add two to account for top and bottom endpoints
-    //very inefficient to create a_nSubdivision points triangles,
-    //but it works
-    //a_nSubdivisions += 2;
-
-    std::cout << "=======================================" << std::endl;
+    int hSubdivisions = a_nSubdivisions + 2;
 
     //max y value
     float y = a_fRadius;
 
     //difference in height per slice
-    float yDif = a_fRadius * 2 / (a_nSubdivisions + 1);
+    float yDif = a_fRadius * 2 / (hSubdivisions + 1);
 
     //amount of rotation per subdivision
     float angle = 360.0f / a_nSubdivisions / 180 * PI;
-
-    std::cout << "yDif: " << yDif << std::endl;
 
     //create array to hold current points and next points
     vector3* points = new vector3[a_nSubdivisions];
     vector3* nextPoints = new vector3[a_nSubdivisions];
 
     //create array to hold radii
-    float* radii = new float[a_nSubdivisions];
+    float* radii = new float[hSubdivisions];
 
     //calculate radius at each subdivisions
-    //for (int i = 0; i < a_nSubdivisions / 2; i++)
-    //{
-        //radii[i] = radii[a_nSubdivisions - i - 1] =
-            //sqrt(pow(a_fRadius, 2) - pow(a_fRadius - (i * yDif), 2));
-    //}
-    for (int i = 0; i < a_nSubdivisions; i++)
+    for (int i = 0; i < hSubdivisions / 2; i++)
     {
-        std::cout << i << ": " << i * angle / 2 << std::endl;
-        radii[i] = a_fRadius * asin(i * angle / 2);
+        radii[i] = radii[hSubdivisions - i - 1] =
+            sqrt(pow(a_fRadius, 2) - pow(a_fRadius - (i * yDif), 2));
     }
 
     //if the number of subdivisions is odd,
     //set the middle radius to the full radius
-    if (a_nSubdivisions % 2 == 1)
-        radii[a_nSubdivisions / 2 + 1] = a_fRadius;
+    if (hSubdivisions % 2 == 1)
+        radii[hSubdivisions / 2] = a_fRadius;
 
     //sides
-    for (int i = 0; i < a_nSubdivisions; i++)
+    for (int i = 0; i < hSubdivisions; i++)
     {
+        //calculate the next points in the slices
         for (int k = 0; k < a_nSubdivisions; k++)
-        {
             nextPoints[k] = vector3(cos(k * angle) * radii[i], y - (i + 1) * yDif, sin(k * angle) * radii[i]);
-        }
-
-        std::cout << "radius " << i << ": " << radii[i] << std::endl;
 
         //add the quad for this slice
         if (i != 0)
