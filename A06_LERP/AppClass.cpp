@@ -13,6 +13,27 @@ void AppClass::InitVariables(void)
 
 	m_pMeshMngr->LoadModel("Sorted\\WallEye.bto", "WallEye");
 
+    points = new vector3[11]
+    {
+        vector3(-4, -2, 5),
+        vector3(1, -2, 5),
+        vector3(-3, -1, 3),
+        vector3(2, -1, 3),
+        vector3(-2, 0, 0),
+        vector3(3, 0, 0),
+        vector3(-1, 1, -3),
+        vector3(4, 1, -3),
+        vector3(0, 2, -5),
+        vector3(5, 2, -5),
+        vector3(1, 3, -5)
+    };
+    spheres = new PrimitiveClass[11];
+    for (int i = 0; i < 11; i++)
+    {
+        spheres[i] = PrimitiveClass();
+        spheres[i].GenerateSphere(0.1f, 10, RERED);
+    }
+
 	fDuration = 1.0f;
 }
 
@@ -36,7 +57,11 @@ void AppClass::Update(void)
 #pragma endregion
 
 #pragma region Your Code goes here
-	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "WallEye");
+    int index = (int)(fRunTime) % 11;
+    double timer = fRunTime - (long)fRunTime;
+    vector3 res = glm::lerp(points[index], points[(index + 1) % 11], (float)timer);
+    matrix4 m = glm::translate(IDENTITY_M4, res);
+	m_pMeshMngr->SetModelMatrix(m, "WallEye");
 #pragma endregion
 
 #pragma region Does not need changes but feel free to change anything here
@@ -75,6 +100,13 @@ void AppClass::Display(void)
 		break;
 	}
 	
+    matrix4 m;
+    for (int i = 0; i < 11; i++)
+    {
+        m = glm::translate(IDENTITY_M4, points[i]);
+        spheres[i].Render(m_pCameraMngr->GetProjectionMatrix(), m_pCameraMngr->GetViewMatrix(), m);
+    }
+
 	m_pMeshMngr->Render(); //renders the render list
 
 	m_pGLSystem->GLSwapBuffers(); //Swaps the OpenGL buffers
@@ -83,4 +115,7 @@ void AppClass::Display(void)
 void AppClass::Release(void)
 {
 	super::Release(); //release the memory of the inherited fields
+
+    delete[] points;
+    delete[] spheres;
 }
