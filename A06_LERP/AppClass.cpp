@@ -34,7 +34,7 @@ void AppClass::InitVariables(void)
         spheres[i].GenerateSphere(0.1f, 10, RERED);
     }
 
-	fDuration = 1.0f;
+	fDuration = 0.2f;
 }
 
 void AppClass::Update(void)
@@ -57,11 +57,11 @@ void AppClass::Update(void)
 #pragma endregion
 
 #pragma region Your Code goes here
-    int index = (int)(fRunTime) % 11;
-    double timer = fRunTime - (long)fRunTime;
-    vector3 res = glm::lerp(points[index], points[(index + 1) % 11], (float)timer);
-    matrix4 m = glm::translate(IDENTITY_M4, res);
-	m_pMeshMngr->SetModelMatrix(m, "WallEye");
+    int index = (int)(fRunTime / fDuration) % 11;
+    double decimal = fRunTime - (int)(fRunTime / (11 * fDuration)) * 11 * fDuration;
+    double timer = decimal - index * fDuration;
+    vector3 res = glm::lerp(points[index], points[(index + 1) % 11], (float)(timer / fDuration));
+	m_pMeshMngr->SetModelMatrix(glm::translate(IDENTITY_M4, res), "WallEye");
 #pragma endregion
 
 #pragma region Does not need changes but feel free to change anything here
