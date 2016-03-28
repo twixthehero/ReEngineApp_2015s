@@ -23,23 +23,20 @@ void AppClass::ProcessKeyboard(void)
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
 	{
-		m_v3Orientation = vector3(0.0f);
+        m_mToWorld = IDENTITY_M4;
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
 	{
-		if (!bModifier) m_v3Orientation.x += 1.0f;
-		else m_v3Orientation.x -= 1.0f;
+        m_mToWorld = glm::rotate(m_mToWorld, !bModifier ? 1.0f : -1.0f, vector3(1, 0, 0));
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y))
 	{
-		if (!bModifier) m_v3Orientation.y += 1.0f;
-		else m_v3Orientation.y -= 1.0f;
+        m_mToWorld = glm::rotate(m_mToWorld, !bModifier ? 1.0f : -1.0f, vector3(0, 1, 0));
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
 	{
-		if (!bModifier) m_v3Orientation.z += 1.0f;
-		else m_v3Orientation.z -= 1.0f;
+        m_mToWorld = glm::rotate(m_mToWorld, !bModifier ? 1.0f : -1.0f, vector3(0, 0, 1));
 	}
 
 #pragma region Camera Positioning
