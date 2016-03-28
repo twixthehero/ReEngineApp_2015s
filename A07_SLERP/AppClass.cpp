@@ -1,7 +1,7 @@
 #include "AppClass.h"
 void AppClass::InitWindow(String a_sWindowName)
 {
-	super::InitWindow("SLERP - YOUR USER NAME GOES HERE"); // Window Name
+	super::InitWindow("SLERP - Maximilian Wright"); // Window Name
 
 	//Setting the color to black
 	m_v4ClearColor = vector4(0.0f);
@@ -22,6 +22,7 @@ void AppClass::InitVariables(void)
 
 	//Setting the days duration
 	m_fDay = 1.0f;
+    //m_fDay = 0.05f;
 }
 
 void AppClass::Update(void)
@@ -47,10 +48,43 @@ void AppClass::Update(void)
 	float fEarthHalfRevTime = 0.5f * m_fDay; // Move for Half a day
 	float fMoonHalfOrbTime = 14.0f * m_fDay; //Moon's orbit is 28 earth days, so half the time for half a route
 
+    quaternion qStart = quaternion(vector3(0));
+    quaternion qHalf = quaternion(vector3(0, PI, 0));
+    quaternion qWhole = quaternion(vector3(0, (float)(PI * 2), 0));
+    matrix4 m4Sun = glm::scale(IDENTITY_M4, vector3(5.936f));
+    matrix4 m4Earth = IDENTITY_M4;
+    matrix4 m4Moon = IDENTITY_M4;
+
+    float* earthWhole = new float;
+    float earthRot = modff((float)(fRunTime / fEarthHalfOrbTime), earthWhole);
+    bool earthHalf = (int)(*earthWhole) % 2 == 0;
+    float* moonWhole = new float;
+    float moonRot = modff((float)(fRunTime / fMoonHalfOrbTime), moonWhole);
+    bool moonHalf = (int)(*moonWhole) % 2 == 0;
+
+    quaternion qEarth = glm::mix(earthHalf ? qHalf : qStart, earthHalf ? qWhole : qHalf, earthRot);
+    m4Earth = m4Earth * glm::mat4_cast(qEarth);
+    m4Earth = glm::translate(m4Earth, vector3(0, 0, 11));
+    
+    quaternion qMoon = glm::mix(moonHalf ? qHalf : qStart, moonHalf ? qWhole : qHalf, moonRot);
+    m4Moon = glm::mat4_cast(qMoon);
+    m4Moon = glm::translate(m4Moon, vector3(0, 0, 2));
+    m4Moon = m4Earth * m4Moon;
+
+    bool earthRevHalf = (int)(fRunTime / fEarthHalfRevTime) % 2 == 0;
+    float earthRev = (fRunTime - (int)(fRunTime / fEarthHalfRevTime) * (float)fEarthHalfRevTime) / (float)fEarthHalfRevTime;
+    m4Earth = m4Earth * glm::mat4_cast(glm::mix(earthRevHalf ? qHalf : qStart, earthRevHalf ? qWhole : qHalf, earthRev));
+    bool moonRevHalf = (int)(fRunTime / fMoonHalfOrbTime) % 2 == 0;
+    float moonRev = (fRunTime - (int)(fRunTime / fMoonHalfOrbTime) * (float)fMoonHalfOrbTime) / (float)fMoonHalfOrbTime;
+    m4Moon = m4Moon * glm::mat4_cast(glm::mix(moonRevHalf ? qHalf : qStart, moonRevHalf ? qWhole : qHalf, -moonRev));
+
+    m4Earth = glm::scale(m4Earth, vector3(0.524f));
+    m4Moon = glm::scale(m4Moon, vector3(0.524f * 0.27f));
+
 	//Setting the matrices
-	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "Sun");
-	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "Earth");
-	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "Moon");
+	m_pMeshMngr->SetModelMatrix(m4Sun, "Sun");
+	m_pMeshMngr->SetModelMatrix(m4Earth, "Earth");
+	m_pMeshMngr->SetModelMatrix(m4Moon, "Moon");
 
 	//Adds all loaded instance to the render list
 	m_pMeshMngr->AddInstanceToRenderList("ALL");
