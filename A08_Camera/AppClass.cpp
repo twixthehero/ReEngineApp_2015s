@@ -28,6 +28,13 @@ void AppClass::Update(void)
 	//Update the mesh manager's time without updating for collision detection
 	m_pMeshMngr->Update();
 
+    if (m_bFPC)
+    {
+        UpdateMouseDelta();
+        cam->ChangeYaw(-my);
+        cam->ChangePitch(mx);
+    }
+
 	//Getting the time between calls
 	double fCallTime = m_pSystem->LapClock();
 	//Counting the cumulative time
@@ -45,6 +52,52 @@ void AppClass::Update(void)
 
 	m_pMeshMngr->Print("FPS:");
 	m_pMeshMngr->Print(std::to_string(nFPS), RERED);
+}
+
+void AppClass::UpdateMouseDelta()
+{
+    float a_fSpeed = 0.005f;
+    UINT	MouseX, MouseY;
+    UINT	CenterX, CenterY;
+
+    CenterX = m_pSystem->GetWindowX() + m_pSystem->GetWindowWidth() / 2;
+    CenterY = m_pSystem->GetWindowY() + m_pSystem->GetWindowHeight() / 2;
+
+    //Calculate the position of the mouse and store it
+    POINT pt;
+    GetCursorPos(&pt);
+    MouseX = pt.x;
+    MouseY = pt.y;
+
+    //Calculate the difference in view with the angle
+    float fAngleX = 0.0f;
+    float fAngleY = 0.0f;
+    float fDeltaMouse = 0.0f;
+    if (MouseX < CenterX)
+    {
+        fDeltaMouse = static_cast<float>(CenterX - MouseX);
+        fAngleY += fDeltaMouse * a_fSpeed;
+    }
+    else if (MouseX > CenterX)
+    {
+        fDeltaMouse = static_cast<float>(MouseX - CenterX);
+        fAngleY -= fDeltaMouse * a_fSpeed;
+    }
+
+    if (MouseY < CenterY)
+    {
+        fDeltaMouse = static_cast<float>(CenterY - MouseY);
+        fAngleX -= fDeltaMouse * a_fSpeed;
+    }
+    else if (MouseY > CenterY)
+    {
+        fDeltaMouse = static_cast<float>(MouseY - CenterY);
+        fAngleX += fDeltaMouse * a_fSpeed;
+    }
+
+    mx = fAngleX;
+    my = fAngleY;
+    SetCursorPos(CenterX, CenterY);//Position the mouse in the center
 }
 
 void AppClass::Display(void)

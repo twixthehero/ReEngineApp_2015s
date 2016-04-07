@@ -17,6 +17,8 @@ public:
     Camera* cam;
     PrimitiveClass* prim;
 	typedef ReEngAppClass super;
+    float mx;
+    float my;
 	/*
 	USAGE: Constructor
 	ARGUMENTS:
@@ -33,6 +35,9 @@ public:
 	OUTPUT: ---
 	*/
 	~AppClass(void) { Release(); }
+
+    void UpdateMouseDelta();
+
 	/*
 	USAGE: Reads the configuration of the application to a file
 	ARGUMENTS: ---

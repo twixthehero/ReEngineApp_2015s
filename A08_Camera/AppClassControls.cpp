@@ -82,6 +82,11 @@ void AppClass::ProcessMouse(void)
 			bLast##key = pressed; } //remember the state
 #pragma endregion
 
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+    {
+        
+    }
+
 	if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Middle))
 		m_bArcBall = true;
 	

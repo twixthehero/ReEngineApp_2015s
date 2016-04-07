@@ -14,9 +14,9 @@ void Camera::Initialize()
     aspectRatio = 4.0f / 3.0f;
     nearDist = 0.1f;
     farDist = 1000.0f;
-    position = vector4(0.0f, 0.0f, -10.0f, 1.0f);
+    position = vector3(0.0f, 0.0f, -10.0f);
     up = vector3(0.0f, 1.0f, 0.0f);
-    target = vector4(0.0f, 0.0f, 0.0f, 1.0f);
+    target = vector3(0.0f, 0.0f, 0.0f);
     rotation = glm::quat();
 }
 
@@ -50,72 +50,77 @@ glm::mat4 Camera::GetProjection(bool bOrthographic)
 
 glm::mat4 Camera::GetView()
 {
-    return glm::lookAt(vector3(position.x, position.y, position.z), vector3(target.x, target.y, target.z), up);
+    return glm::lookAt(vector3(position.x, position.y, position.z),
+        vector3(target.x, target.y, target.z),
+        vector3(up.x, up.y, up.z));
 }
 
 void Camera::SetPosition(glm::vec3 pos)
 {
-    position = vector4(pos, 1.0f);
+    position = pos;
 }
 
 void Camera::SetTarget(glm::vec3 tar)
 {
-    target = vector4(tar, 1.0f);
+    vector3 forward = glm::normalize(tar - position);
+    target = position + forward;
 }
 
 void Camera::SetUp(glm::vec3 u)
 {
-    up = u;
+    up = glm::normalize(u);
 }
 
 void Camera::MoveForward(float fIncrement)
 {
-    position += (fIncrement * glm::normalize(vector4(0.0f,0.0f,1.0f,1.0f) * rotation));
-    target += (fIncrement * glm::normalize(vector4(0.0f, 0.0f, 1.0f, 1.0f) * rotation));
+    vector3 forward = glm::normalize(target - position);
+    position += fIncrement * forward;
+    target += fIncrement * forward;
 }
     
 void Camera::MoveSideways(float fIncrement)
 {
-    position += (fIncrement * glm::normalize(vector4(1.0f, 0.0f, 0.0f, 1.0f) * rotation));
-    target += (fIncrement * glm::normalize(vector4(1.0f, 0.0f, 0.0f, 1.0f) * rotation));
+    vector3 forward = glm::normalize(target - position);
+    glm::quat toRight = glm::angleAxis(-90.0f, vector3(up.x, up.y, up.z));
+    vector3 right = forward * toRight;
+    position += fIncrement * glm::normalize(right);
+    target += fIncrement * glm::normalize(right);
 }
 
 void Camera::MoveVertical(float fIncrement)
 {
-    position += fIncrement * glm::normalize(vector4(0.0f, 1.0f, 0.0f, 1.0f) * rotation);
-    target += fIncrement * glm::normalize(vector4(0.0f, 1.0f, 0.0f, 1.0f) * rotation);
+    position += fIncrement * up;
+    target += fIncrement * up;
 }
 
 void Camera::ChangePitch(float fIncrement) //x
 {
     fIncrement *= 10;
-    //rotate
-    rotation = glm::rotate(rotation, fIncrement, vector3(1, 0, 0));
-    //set the up/forward vector
-    vector4 newUp = vector4(0.0f, 1.0f, 0.0f, 0.0f) * rotation;
-    up = vector3(newUp.x, newUp.y, newUp.z);
-    target = vector4(0.0f, 0.0f, 1.0f, 0.0f) * rotation;
+
+    vector3 forward = vector3(target.x, target.y, target.z) - vector3(position.x, position.y, position.z);
+    vector3 right = glm::cross(forward, vector3(up.x, up.y, up.z));
+
+    rotation = glm::normalize(rotation * glm::angleAxis(fIncrement, right));
+
+    up = vector3(0.0f, 1.0f, 0.0f) * rotation;
+    target = vector3(0.0f, 0.0f, 1.0f) * rotation + position;
 }
 
 void Camera::ChangeRoll(float fIncrement) //z
 {
     fIncrement *= 10;
-    //rotate
-    rotation = glm::rotate(rotation, fIncrement, vector3(0, 0, 1));
-    //set the up/forward vector
-    vector4 newUp = vector4(0.0f,1.0f,0.0f, 0.0f) * rotation;
-    up = vector3(newUp.x, newUp.y, newUp.z);
-    target = vector4(0.0f, 0.0f, 1.0f, 0.0f) * rotation;
+    
+    vector3 forward = vector3(target.x, target.y, target.z) - vector3(position.x, position.y, position.z);
+    rotation = glm::normalize(rotation * glm::angleAxis(fIncrement, forward));
 
+    up = vector3(0.0f, 1.0f, 0.0f) * rotation;
 }
 
 void Camera::ChangeYaw(float fIncrement) //y
 {
     fIncrement *= 10;
-    //rotate
-    rotation = glm::rotate(rotation, fIncrement, vector3(0, 1, 0));
-    //set the up/forward vector
-    vector4 newUp = vector4(0.0f, 1.0f, 0.0f, 0.0f) * rotation;
-    up = vector3(newUp.x, newUp.y, newUp.z);
-    target = vector4(0.0f, 0.0f, 1.0f, 0.0f) * rotation;
+
+    rotation = glm::normalize(rotation * glm::angleAxis(fIncrement, up));
+
+    target = vector3(0.0f, 0.0f, 1.0f) * rotation + position;
 }
