@@ -7,45 +7,35 @@ void AppClass::InitWindow(String a_sWindowName)
 
 void AppClass::InitVariables(void)
 {
-	m_pCameraMngr->SetPositionTargetAndView(vector3(0.0f, 0.0f, 15.0f), vector3(0.0f, 0.0f, 0.0f), REAXISY);
+    m_pCameraMngr->SetPositionTargetAndView(vector3(0.0f, 0.0f, 15.0f), vector3(0.0f, 0.0f, 0.0f), REAXISY);
 
-	m_pMesh = new MyMesh();
+    m_pMesh = new MyMesh();
     m_fMatrixArray = new float[m_nObjects * 16];
 
-    for (int i = 0; i < m_nObjects; i++)
+    vector3 pos[] =
     {
-        int row = CalcRow(i);
-        vector3 trans = vector3(0, row, 0);
+        vector3(0.0f, 5.0f, 0.0f),
+        vector3(-1.0f, 3.0f, 0.0f),
+        vector3(1.0f, 3.0f, 0.0f),
+        vector3(-2.0f, 1.0f, 0.0f),
+        vector3(2.0f, 1.0f, 0.0f),
+        vector3(-3.0f, -1.0f, 0.0f),
+        vector3(-1.0f, -1.0f, 0.0f),
+        vector3(1.0f, -1.0f, 0.0f),
+        vector3(3.0f, -1.0f, 0.0f)
+    };
 
-        matrix4 transMat = glm::translate(trans);
-        float* array = glm::value_ptr(transMat);
-        
-        for (int k = 0; k < 16; k++)
-        {
-            *(m_fMatrixArray + (i * 16) + k) = array[k];
-        }
-
-        std::cout << m_fMatrixArray[i] << std::endl;
-
-
-        //CreateTriangle(trans);
+    const float* m4MVP = glm::value_ptr(IDENTITY_M4);
+    for (uint n = 0; n < m_nObjects; n++)
+    {
+    	memcpy(&m_fMatrixArray[n * 16], m4MVP, 16 * sizeof(float));
     }
+
+    for (int i = 0; i < m_nObjects; i++)
+        CreateTriangle(pos[i]);
 
 	//Compiling the mesh
 	m_pMesh->CompileOpenGL3X();
-}
-
-int AppClass::CalcRow(int elements)
-{
-    int row = 1;
-
-    while (elements - row > 0)
-    {
-        elements -= row;
-        row++;
-    }
-
-    return row;
 }
 
 void AppClass::CreateTriangle(vector3 pos)
