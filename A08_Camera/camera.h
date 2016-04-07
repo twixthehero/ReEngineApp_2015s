@@ -2,9 +2,11 @@
 #define __CAMERA_H__
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include "RE\ReEngAppClass.h"
 class Camera
 {
 public:
+    void Initialize();
     static Camera* instance;
     static Camera* GetInstance();
     static void ReleaseInstance();
@@ -19,12 +21,16 @@ public:
     void ChangePitch(float fIncrement);
     void ChangeRoll(float fIncrement);
     void ChangeYaw(float fIncrement);
+
 private:
     Camera();
     ~Camera();
-    glm::mat4 m4Camera;
-    glm::mat4 m4Pos;
+    glm::mat4 camera;
     glm::quat rotation;
+    glm::vec4 position;
+    glm::vec4 target;
+    glm::vec3 up;
+    float fov, aspectRatio, nearDist, farDist;
 };
 
 #endif

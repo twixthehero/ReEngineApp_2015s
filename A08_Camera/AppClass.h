@@ -7,14 +7,15 @@ Date: 2015/09
 
 #include "RE\ReEngAppClass.h"
 #include <SFML\Graphics.hpp>
+#include "camera.h"
 
 using namespace ReEng; //Using ReEng namespace to use all the classes in the dll
 
 class AppClass : public ReEngAppClass
 {
-	float m_fDay = 1.0f; //How much time in seconds a day lasts;
-
 public:
+    Camera* cam;
+    PrimitiveClass* prim;
 	typedef ReEngAppClass super;
 	/*
 	USAGE: Constructor
