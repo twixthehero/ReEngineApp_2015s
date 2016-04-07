@@ -31,7 +31,7 @@ public:
 
 	MyMesh* m_pMesh = nullptr;
 	float* m_fMatrixArray = nullptr;
-	int m_nObjects = 200;
+	int m_nObjects = 2;
 
 	/* Constructor */
 	AppClass(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow) : super(hInstance, lpCmdLine, nCmdShow) {}
@@ -48,6 +48,9 @@ public:
 	the purpose of this member function is to initialize member variables specific for this lesson
 	*/
 	virtual void InitVariables(void);
+
+    void CreateTriangle(vector3);
+    int CalcRow(int);
 
 	/*
 	Update

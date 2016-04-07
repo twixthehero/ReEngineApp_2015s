@@ -10,23 +10,52 @@ void AppClass::InitVariables(void)
 	m_pCameraMngr->SetPositionTargetAndView(vector3(0.0f, 0.0f, 15.0f), vector3(0.0f, 0.0f, 0.0f), REAXISY);
 
 	m_pMesh = new MyMesh();
-	
-	//Creating the Mesh points
-	m_pMesh->AddVertexPosition(vector3(-1.0f, -1.0f, 0.0f));
-	m_pMesh->AddVertexColor(RERED);
-	m_pMesh->AddVertexPosition(vector3( 1.0f, -1.0f, 0.0f));
-	m_pMesh->AddVertexColor(RERED);
-	m_pMesh->AddVertexPosition(vector3(-1.0f,  1.0f, 0.0f));
-	m_pMesh->AddVertexColor(RERED);
-	m_pMesh->AddVertexPosition(vector3(-1.0f,  1.0f, 0.0f));
-	m_pMesh->AddVertexColor(REBLUE);
-	m_pMesh->AddVertexPosition(vector3(1.0f, -1.0f, 0.0f));
-	m_pMesh->AddVertexColor(REBLUE);
-	m_pMesh->AddVertexPosition(vector3( 1.0f, 1.0f, 0.0f));
-	m_pMesh->AddVertexColor(REBLUE);
+    m_fMatrixArray = new float[m_nObjects * 16];
+
+    for (int i = 0; i < m_nObjects; i++)
+    {
+        int row = CalcRow(i);
+        vector3 trans = vector3(0, row, 0);
+
+        matrix4 transMat = glm::translate(trans);
+        float* array = glm::value_ptr(transMat);
+        
+        for (int k = 0; k < 16; k++)
+        {
+            *(m_fMatrixArray + (i * 16) + k) = array[k];
+        }
+
+        std::cout << m_fMatrixArray[i] << std::endl;
+
+
+        //CreateTriangle(trans);
+    }
 
 	//Compiling the mesh
 	m_pMesh->CompileOpenGL3X();
+}
+
+int AppClass::CalcRow(int elements)
+{
+    int row = 1;
+
+    while (elements - row > 0)
+    {
+        elements -= row;
+        row++;
+    }
+
+    return row;
+}
+
+void AppClass::CreateTriangle(vector3 pos)
+{
+    m_pMesh->AddVertexPosition(pos + vector3(-1.0f, -1.0f, 0.0f));
+    m_pMesh->AddVertexColor(REGREEN);
+    m_pMesh->AddVertexPosition(pos + vector3(1.0f, -1.0f, 0.0f));
+    m_pMesh->AddVertexColor(RERED);
+    m_pMesh->AddVertexPosition(pos + vector3(0.0f, 1.0f, 0.0f));
+    m_pMesh->AddVertexColor(REBLUE);
 }
 
 void AppClass::Update(void)
@@ -63,7 +92,8 @@ void AppClass::Display(void)
 	matrix4 m4Projection = m_pCameraMngr->GetProjectionMatrix();
 	matrix4 m4View = m_pCameraMngr->GetViewMatrix();
 
-	m_pMesh->Render(m4Projection, m4View, IDENTITY_M4);//Rendering nObjects
+	//m_pMesh->Render(m4Projection, m4View, IDENTITY_M4);//Rendering nObjects
+    m_pMesh->RenderList(m4Projection, m4View, m_fMatrixArray, m_nObjects);
 
 	m_pMeshMngr->Render();
 
