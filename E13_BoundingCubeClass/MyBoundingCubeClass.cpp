@@ -85,36 +85,8 @@ MyBoundingCubeClass::~MyBoundingCubeClass() { Release(); };
 void MyBoundingCubeClass::SetModelMatrix(matrix4 a_m4ToWorld)
 {
     m_m4ToWorld = a_m4ToWorld;
-    /*
-    vector3 p[] = 
-    {
-        m_v3Max,
-        vector3(m_v3Max.x, m_v3Max.y, m_v3Min.z),
-        vector3(m_v3Min.x, m_v3Max.y, m_v3Min.z),
-        vector3(m_v3Min.x, m_v3Max.y, m_v3Max.z),
-        m_v3Min,
-        vector3(m_v3Max.x, m_v3Min.y, m_v3Min.z),
-        vector3(m_v3Min.x, m_v3Min.y, m_v3Min.z),
-        vector3(m_v3Min.x, m_v3Min.y, m_v3Max.z)
-    };
-
-    min = max = p[0];
-
-    for (int i = 0; i < 8; i++)
-    {
-        vector4 point = vector4(p[i], 1.0f) * glm::mat4_cast(glm::quat(m_m4ToWorld));
-
-        if (i == 0)
-            min = max = vector3(point.x, point.y, point.z);
-
-        if (point.x > max.x) max.x = point.x;
-        if (point.y > max.y) max.y = point.y;
-        if (point.z > max.z) max.z = point.z;
-        if (point.x < min.x) min.x = point.x;
-        if (point.y < min.y) min.y = point.y;
-        if (point.z < min.z) min.z = point.z;
-    }*/
     
+    //recalc min/max
     for (uint i = 0; i < points.size(); i++)
     {
         vector3 point = vector3(m_m4ToWorld * vector4(points[i], 1.0f));
@@ -140,6 +112,7 @@ void MyBoundingCubeClass::SetModelMatrix(matrix4 a_m4ToWorld)
     
     float tmp;
 
+    //fix issue where max goes under min and vice versa
     if (max.x < min.x)
     {
         tmp = min.x;
@@ -178,6 +151,11 @@ bool MyBoundingCubeClass::IsColliding(MyBoundingCubeClass* const a_pOther)
     //Collision check goes here
     vector3 v3Temp = vector3(m_m4ToWorld * vector4(center, 1.0f));
     vector3 v3Temp1 = vector3(a_pOther->m_m4ToWorld * vector4(a_pOther->center, 1.0f));
+
+    /*
+    colliding doesn't work properly...
+    probably some issue with the actual values for min/max
+    */
 
     bool bAreColliding = true;
     vector3 vMin1 = vector3(m_m4ToWorld * vector4(min, 1.0f));
