@@ -117,7 +117,7 @@ void MyBoundingCubeClass::SetModelMatrix(matrix4 a_m4ToWorld)
     
     for (uint i = 0; i < points.size(); i++)
     {
-        vector4 point = vector4(points[i], 1.0f) * glm::mat4_cast(glm::quat(m_m4ToWorld));
+        vector3 point = vector3(m_m4ToWorld * vector4(points[i], 1.0f));
 
         if (i == 0)
             min = max = vector3(point.x, point.y, point.z);
@@ -176,14 +176,14 @@ vector3 MyBoundingCubeClass::GetSize(void) { return m_v3Size; };
 bool MyBoundingCubeClass::IsColliding(MyBoundingCubeClass* const a_pOther)
 {
     //Collision check goes here
-    vector3 v3Temp = vector3(m_m4ToWorld * vector4(m_v3Center, 1.0f));
-    vector3 v3Temp1 = vector3(a_pOther->m_m4ToWorld * vector4(a_pOther->m_v3Center, 1.0f));
+    vector3 v3Temp = vector3(m_m4ToWorld * vector4(center, 1.0f));
+    vector3 v3Temp1 = vector3(a_pOther->m_m4ToWorld * vector4(a_pOther->center, 1.0f));
 
     bool bAreColliding = true;
-    vector3 vMin1 = vector3(m_m4ToWorld * vector4(m_v3Min, 1.0f));
-    vector3 vMax1 = vector3(m_m4ToWorld * vector4(m_v3Max, 1.0f));
-    vector3 vMin2 = vector3(a_pOther->m_m4ToWorld * vector4(a_pOther->m_v3Min, 1.0f));
-    vector3 vMax2 = vector3(a_pOther->m_m4ToWorld * vector4(a_pOther->m_v3Max, 1.0f));
+    vector3 vMin1 = vector3(m_m4ToWorld * vector4(min, 1.0f));
+    vector3 vMax1 = vector3(m_m4ToWorld * vector4(max, 1.0f));
+    vector3 vMin2 = vector3(a_pOther->m_m4ToWorld * vector4(a_pOther->min, 1.0f));
+    vector3 vMax2 = vector3(a_pOther->m_m4ToWorld * vector4(a_pOther->max, 1.0f));
 
     //Check for X
     if (vMax1.x < vMin2.x)
