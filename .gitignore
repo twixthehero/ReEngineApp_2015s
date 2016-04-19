@@ -6,6 +6,8 @@ _Binary/01_BasicsD.cfg
 _Binary/ReEng_d.dll
 Z_DELETE
 
+*.zip
+
 # Compiled Object files
 *.slo
 *.lo
