@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModelViewer", "ModelViewer\ModelViewer_VS15.vcxproj", "{FB51C0AB-6E10-4DEB-9D27-A3C31251A36D}"
 EndProject
@@ -23,7 +23,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01_Basics", "01_Basics\01_B
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02_Inheriting", "02_Inheriting\02_Inheriting.vcxproj", "{F1EDF2C3-8663-42FF-89D7-D0C4857D4358}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03_SFML_Input", "03_SFML_Input\03_SFML_Input.vcxproj", "{1EA67B6E-CAF1-4F2A-8FB5-99B5D30E3004}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03_Input", "03_SFML_Input\03_SFML_Input.vcxproj", "{1EA67B6E-CAF1-4F2A-8FB5-99B5D30E3004}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04_MeshRendering", "04_MeshRendering\04_MeshRendering.vcxproj", "{D04CA8CD-8C31-4F09-A363-33BFC486C26F}"
 EndProject
@@ -59,8 +59,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "A08s_CameraSingleton_DEMO",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "E10s_Projections_DEMO", "E10s_Projections\E10s_Projections.vcxproj", "{7B8DF49F-C152-4B07-AAE6-965586DBB6D9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "E11_Sierpinski", "E11_Sierpinski\E11_Sierpinski.vcxproj", "{4965C0BB-DC2D-4C76-B565-2E5C77F75BDD}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "E11s_Sierpinski_DEMO", "E11s_Sierpinski\E11s_Sierpinski.vcxproj", "{C12B2C32-E9C5-40DF-9931-C9C429B7B1F6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "E12s_BoundingSphereClass_DEMO", "E12s_BoundingSphereClass\E12s_BoundingSphereClass.vcxproj", "{62751575-18E6-4E32-96A6-63A0EF92A196}"
@@ -68,8 +66,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "E13_BoundingBoxClass", "E13_BoundingBoxClass\E13_BoundingBoxClass.vcxproj", "{ECF77324-3C73-4C41-A5FA-D2291E7748E0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "E13s_BoundingBoxClass_DEMO", "E13s_BoundingBoxClass\E13s_BoundingBoxClass.vcxproj", "{11432875-2A70-43F7-B99D-DCB9CDF5132C}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "A06_LERP", "A06_LERP\A06_LERP.vcxproj", "{8FB45351-2348-4127-9143-D866C86EE527}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "A06s_LERP_DEMO", "A06s_LERP\A06s_LERP.vcxproj", "{7CBBEAD1-E3B6-4D38-8DB0-C2E9B31E8936}"
 EndProject
@@ -203,10 +199,6 @@ Global
 		{7B8DF49F-C152-4B07-AAE6-965586DBB6D9}.Debug|x86.Build.0 = Debug|Win32
 		{7B8DF49F-C152-4B07-AAE6-965586DBB6D9}.Release|x86.ActiveCfg = Release|Win32
 		{7B8DF49F-C152-4B07-AAE6-965586DBB6D9}.Release|x86.Build.0 = Release|Win32
-		{4965C0BB-DC2D-4C76-B565-2E5C77F75BDD}.Debug|x86.ActiveCfg = Debug|Win32
-		{4965C0BB-DC2D-4C76-B565-2E5C77F75BDD}.Debug|x86.Build.0 = Debug|Win32
-		{4965C0BB-DC2D-4C76-B565-2E5C77F75BDD}.Release|x86.ActiveCfg = Release|Win32
-		{4965C0BB-DC2D-4C76-B565-2E5C77F75BDD}.Release|x86.Build.0 = Release|Win32
 		{C12B2C32-E9C5-40DF-9931-C9C429B7B1F6}.Debug|x86.ActiveCfg = Debug|Win32
 		{C12B2C32-E9C5-40DF-9931-C9C429B7B1F6}.Debug|x86.Build.0 = Debug|Win32
 		{C12B2C32-E9C5-40DF-9931-C9C429B7B1F6}.Release|x86.ActiveCfg = Release|Win32
@@ -223,10 +215,6 @@ Global
 		{11432875-2A70-43F7-B99D-DCB9CDF5132C}.Debug|x86.Build.0 = Debug|Win32
 		{11432875-2A70-43F7-B99D-DCB9CDF5132C}.Release|x86.ActiveCfg = Release|Win32
 		{11432875-2A70-43F7-B99D-DCB9CDF5132C}.Release|x86.Build.0 = Release|Win32
-		{8FB45351-2348-4127-9143-D866C86EE527}.Debug|x86.ActiveCfg = Debug|Win32
-		{8FB45351-2348-4127-9143-D866C86EE527}.Debug|x86.Build.0 = Debug|Win32
-		{8FB45351-2348-4127-9143-D866C86EE527}.Release|x86.ActiveCfg = Release|Win32
-		{8FB45351-2348-4127-9143-D866C86EE527}.Release|x86.Build.0 = Release|Win32
 		{7CBBEAD1-E3B6-4D38-8DB0-C2E9B31E8936}.Debug|x86.ActiveCfg = Debug|Win32
 		{7CBBEAD1-E3B6-4D38-8DB0-C2E9B31E8936}.Debug|x86.Build.0 = Debug|Win32
 		{7CBBEAD1-E3B6-4D38-8DB0-C2E9B31E8936}.Release|x86.ActiveCfg = Release|Win32
