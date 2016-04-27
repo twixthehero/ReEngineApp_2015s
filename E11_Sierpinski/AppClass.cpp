@@ -3,6 +3,7 @@ void AppClass::InitWindow(String a_sWindowName)
 {
 	//Using Base InitWindow method
 	super::InitWindow("Instance Rendering");
+	m_v4ClearColor = vector4(REBLACK, 1.0f);
 }
 
 void AppClass::InitVariables(void)
@@ -76,7 +77,7 @@ void AppClass::Update(void)
 
 void AppClass::Display(void)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the window
+	ClearScreen();
 	
 	//Matrices from the camera
 	matrix4 m4Projection = m_pCameraMngr->GetProjectionMatrix();

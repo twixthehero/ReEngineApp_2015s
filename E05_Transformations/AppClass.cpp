@@ -62,8 +62,7 @@ void AppClass::Display(void)
 {
 	//clear the screen
 	ClearScreen();
-	m_pMeshMngr->AddGridToQueue(1.0f, REAXIS::XY); //renders the XY grid with a 100% scale
-
+	
 	//Matrices from the camera
 	matrix4 m4Projection = m_pCameraMngr->GetProjectionMatrix();
 	matrix4 m4View = m_pCameraMngr->GetViewMatrix();
@@ -80,6 +79,10 @@ void AppClass::Display(void)
 	//To render the render list (right now it only contains the grid)
 	m_pMeshMngr->Render();
 	
+	//Render the grid based on the camera's mode:
+	m_pMeshMngr->AddGridToRenderListBasedOnCamera(m_pCameraMngr->GetCameraMode());
+	m_pMeshMngr->Render(); //renders the render list
+	m_pMeshMngr->ResetRenderList(); //Reset the Render list after render
 	m_pGLSystem->GLSwapBuffers(); //Swaps the OpenGL buffers
 }
 
