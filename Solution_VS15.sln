@@ -81,6 +81,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "A05s_Transformations_DEMO",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "T01A_Exam_Solution", "T01-As\T01-As.vcxproj", "{AA18B089-83AC-4904-8600-CD68E61EDC26}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "08_Audio", "08_Audio\08_Audio.vcxproj", "{D50EA787-1AD4-44AC-A230-3304FFB04F82}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "E15_MyEntityManager", "E15_MyEntityManager\E15_MyEntityManager.vcxproj", "{0C037D84-CF9B-4149-AAAB-8317346179DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -243,6 +247,14 @@ Global
 		{AA18B089-83AC-4904-8600-CD68E61EDC26}.Debug|x86.Build.0 = Debug|Win32
 		{AA18B089-83AC-4904-8600-CD68E61EDC26}.Release|x86.ActiveCfg = Release|Win32
 		{AA18B089-83AC-4904-8600-CD68E61EDC26}.Release|x86.Build.0 = Release|Win32
+		{D50EA787-1AD4-44AC-A230-3304FFB04F82}.Debug|x86.ActiveCfg = Debug|Win32
+		{D50EA787-1AD4-44AC-A230-3304FFB04F82}.Debug|x86.Build.0 = Debug|Win32
+		{D50EA787-1AD4-44AC-A230-3304FFB04F82}.Release|x86.ActiveCfg = Release|Win32
+		{D50EA787-1AD4-44AC-A230-3304FFB04F82}.Release|x86.Build.0 = Release|Win32
+		{0C037D84-CF9B-4149-AAAB-8317346179DF}.Debug|x86.ActiveCfg = Debug|Win32
+		{0C037D84-CF9B-4149-AAAB-8317346179DF}.Debug|x86.Build.0 = Debug|Win32
+		{0C037D84-CF9B-4149-AAAB-8317346179DF}.Release|x86.ActiveCfg = Release|Win32
+		{0C037D84-CF9B-4149-AAAB-8317346179DF}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
